@@ -1,7 +1,7 @@
 # DoomLess AI
 
 A digital-wellbeing prototype that adds a clear "nutrition label" to short-form
-videos. Users can select a curated demo video and review seven scores:
+videos. Users can submit a transcript or video URL and review seven scores:
 Learning, Usefulness, Mind Impact, Quality, Personal Relevance, Time Worth, and
 Scroll Risk.
 
@@ -17,32 +17,40 @@ explanations—no installation or API key is required.
 
 ## Features
 
-- Privacy-safe, client-side demo labels with no external API calls
+- Transcript and video-URL input modes
+- Structured, validated scoring through the OpenAI Responses API
 - Seven scores with one-sentence explanations
+- Clear handling for API-key, quota, and model errors
 - Five Instagram and five YouTube Shorts demo URLs with deterministic labels
 - Production-safe labels for the ten curated demo videos
 - Animated demo feed cards grouped by content category
 
 ## Architecture
 
-- `app/page.tsx`: client-side demo selection, result panel, and ten-video feed.
+- `app/page.tsx`: client-side input form, request state, result panel, and ten-video feed.
 - `components/NutritionLabel.tsx`: reusable, typed score-card component.
+- `app/api/analyze/route.ts`: validates requests and calls the OpenAI Responses API.
+- `lib/scoring.ts`: Zod schemas and the neutral wellbeing scoring prompt.
 - `lib/nutrition.ts`: shared frontend types and display metadata.
-- `lib/demo-videos.ts`: the curated videos and deterministic nutrition labels.
+- `lib/demo-videos.ts`: the curated videos and deterministic demo labels.
+- `lib/demo-labels.ts`: demo matching and local smoke-test fallback data.
 
-The public MVP contains no OpenAI API integration or API credentials.
+The API key remains server-side and is never included in client code.
 
 ## Run locally
 
 1. Install dependencies with `pnpm install`.
-2. Run `pnpm dev` and open `http://localhost:3000`.
+2. Create an ignored `.env.local` file containing `OPENAI_API_KEY=your_key`.
+3. Optionally set `OPENAI_MODEL`; the default is `gpt-5.6-luna`.
+4. Run `pnpm dev` and open `http://localhost:3000`.
 
 ## Prototype limitation
 
-The prototype recognizes only the ten curated sample URLs. It does not download,
-scrape, transcribe, or analyze third-party platform content.
+The route does not scrape or transcribe third-party video URLs. URL-only analysis
+therefore produces a conservative label unless usable content is available to the
+model. Transcript input is the reliable path for this scaffold.
 
 ## Security
 
-Never commit `.env`, `.env.local`, or API credentials. Environment files remain
-ignored by Git even though this public demo does not require them.
+Never commit `.env`, `.env.local`, or API credentials. Environment files are
+ignored by Git, and the OpenAI API key is used only by the server-side route.

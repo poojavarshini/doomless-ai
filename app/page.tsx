@@ -3,8 +3,10 @@
 import { FormEvent, useRef, useState } from "react";
 import { DemoReelCard } from "@/components/DemoReelCard";
 import { NutritionLabel } from "@/components/NutritionLabel";
-import { demoVideos, findDemoVideo } from "@/lib/demo-videos";
+import { demoVideos } from "@/lib/demo-videos";
 import type { VideoNutritionLabel } from "@/lib/nutrition";
+
+type InputMode = "url" | "transcript";
 
 const categoryOrder = ["Entertainment", "Learning", "Productivity", "News", "Scroll bait"] as const;
 
@@ -17,39 +19,53 @@ const categoryCopy: Record<(typeof categoryOrder)[number], string> = {
 };
 
 export default function Home() {
+  const [mode, setMode] = useState<InputMode>("transcript");
   const [value, setValue] = useState("");
   const [label, setLabel] = useState<VideoNutritionLabel | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    analyzeVideo(value);
+    await analyzeVideo(mode === "url" ? { videoUrl: value } : { transcript: value });
   }
 
-  function analyzeVideo(videoUrl: string) {
+  async function analyzeVideo(payload: { videoUrl: string } | { transcript: string }) {
     setLoading(true);
     setError("");
 
-    const demo = findDemoVideo(videoUrl);
-    if (!demo) {
-      setLabel(null);
-      setError("This privacy-safe demo supports the 10 sample videos shown below.");
-      setLoading(false);
-      return;
-    }
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
 
-    setLabel({ ...demo.label, video_url: videoUrl });
-    setLoading(false);
-    requestAnimationFrame(() =>
-      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
-    );
+      if (!response.ok) {
+        throw new Error(data.error ?? "Analysis failed.");
+      }
+
+      setLabel(data as VideoNutritionLabel);
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Analysis failed.");
+    } finally {
+      setLoading(false);
+    }
   }
 
-  function analyzeDemo(videoUrl: string) {
+  async function analyzeDemo(videoUrl: string) {
+    setMode("url");
     setValue(videoUrl);
-    analyzeVideo(videoUrl);
+    await analyzeVideo({ videoUrl });
+  }
+
+  function changeMode(nextMode: InputMode) {
+    setMode(nextMode);
+    setValue("");
+    setError("");
   }
 
   return (
@@ -62,28 +78,57 @@ export default function Home() {
           Know what your feed is feeding you.
         </h1>
         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
-          Choose one of the sample video links to see a clear, neutral view of its
-          value, mind impact, and scroll risk.
+          Paste a transcript or video link to get a clear, neutral view of its value,
+          mind impact, and scroll risk.
         </p>
       </header>
 
       <section className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_24rem]">
         <form onSubmit={handleSubmit} className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm">
-          <label htmlFor="content" className="block text-sm font-semibold">
-            Sample video URL
+          <div className="inline-flex rounded-full bg-slate-100 p-1" aria-label="Input type">
+            {(["transcript", "url"] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => changeMode(option)}
+                className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
+                  mode === option ? "bg-white text-slate-950 shadow-sm" : "text-slate-500"
+                }`}
+              >
+                {option === "url" ? "Video URL" : option}
+              </button>
+            ))}
+          </div>
+
+          <label htmlFor="content" className="mt-6 block text-sm font-semibold">
+            {mode === "url" ? "Short-form video URL" : "Video transcript"}
           </label>
-          <input
-            id="content"
-            type="url"
-            required
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-            placeholder="Select a demo below or paste its sample URL"
-            className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
-          />
+          {mode === "url" ? (
+            <input
+              id="content"
+              type="url"
+              required
+              value={value}
+              onChange={(event) => setValue(event.target.value)}
+              placeholder="https://www.youtube.com/shorts/..."
+              className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
+            />
+          ) : (
+            <textarea
+              id="content"
+              required
+              rows={10}
+              value={value}
+              onChange={(event) => setValue(event.target.value)}
+              placeholder="Paste the spoken transcript here..."
+              className="mt-2 w-full resize-y rounded-2xl border border-slate-200 px-4 py-3 outline-none transition focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
+            />
+          )}
 
           <p className="mt-2 text-sm text-slate-500">
-            Ratings load locally from the curated demo dataset; no API key is used.
+            {mode === "url"
+              ? "URL-only scores may be limited when the video's transcript is not publicly available."
+              : "For the most useful label, include the full spoken content."}
           </p>
 
           {error && (
