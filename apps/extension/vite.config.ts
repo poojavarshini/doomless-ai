@@ -7,6 +7,9 @@ const directory = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
+  define: {
+    "process.env.NODE_ENV": JSON.stringify("production"),
+  },
   build: mode === "content" ? {
     outDir: "dist",
     emptyOutDir: true,
