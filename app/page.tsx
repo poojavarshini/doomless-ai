@@ -18,6 +18,34 @@ const categoryCopy: Record<(typeof categoryOrder)[number], string> = {
   "Scroll bait": "High-stimulation examples that demonstrate stronger attention hooks.",
 };
 
+const productivityKpis = [
+  {
+    label: "Focus time reclaimed",
+    measure: "Minutes saved each week by avoiding low-value viewing.",
+    direction: "Increase",
+  },
+  {
+    label: "High-value watch rate",
+    measure: "Videos watched with a Time Worth score of 7 or higher.",
+    direction: "Increase",
+  },
+  {
+    label: "Goal-aligned viewing",
+    measure: "Videos with a Personal Relevance score of 7 or higher.",
+    direction: "Increase",
+  },
+  {
+    label: "Scroll-risk exposure",
+    measure: "Videos watched with a Scroll Risk score above 6.",
+    direction: "Reduce",
+  },
+  {
+    label: "Intentional session rate",
+    measure: "Viewing sessions that end when the user planned.",
+    direction: "Increase",
+  },
+] as const;
+
 export default function Home() {
   const [mode, setMode] = useState<InputMode>("transcript");
   const [value, setValue] = useState("");
@@ -69,7 +97,7 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-6xl px-5 py-10 sm:px-8">
+    <main className="mx-auto min-h-screen max-w-[90rem] px-5 py-10 sm:px-8">
       <header className="max-w-3xl">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
           DoomLess AI
@@ -83,7 +111,7 @@ export default function Home() {
         </p>
       </header>
 
-      <section className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_24rem]">
+      <section className="mt-10 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] xl:grid-cols-[minmax(0,1fr)_24rem_18rem]">
         <form onSubmit={handleSubmit} className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm">
           <div className="inline-flex rounded-full bg-slate-100 p-1" aria-label="Input type">
             {(["transcript", "url"] as const).map((option) => (
@@ -161,6 +189,48 @@ export default function Home() {
             </div>
           )}
         </div>
+
+        <aside
+          aria-labelledby="productivity-kpis-title"
+          className="rounded-3xl border border-emerald-900/10 bg-emerald-950 p-5 text-white shadow-xl shadow-emerald-950/10 lg:col-span-2 xl:sticky xl:top-6 xl:col-span-1"
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">
+            Why use DoomLess AI
+          </p>
+          <h2 id="productivity-kpis-title" className="mt-2 text-2xl font-semibold tracking-tight">
+            5 productivity KPIs
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-emerald-100/75">
+            Turn healthier feed choices into outcomes you can measure over time.
+          </p>
+
+          <ol className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-1">
+            {productivityKpis.map((kpi, index) => (
+              <li key={kpi.label} className="rounded-2xl border border-white/10 bg-white/8 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs font-semibold text-emerald-300">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-[0.68rem] font-semibold ${
+                      kpi.direction === "Reduce"
+                        ? "bg-amber-300/15 text-amber-200"
+                        : "bg-emerald-300/15 text-emerald-200"
+                    }`}
+                  >
+                    {kpi.direction}
+                  </span>
+                </div>
+                <h3 className="mt-3 text-sm font-semibold leading-5">{kpi.label}</h3>
+                <p className="mt-1 text-xs leading-5 text-emerald-100/70">{kpi.measure}</p>
+              </li>
+            ))}
+          </ol>
+
+          <p className="mt-4 border-t border-white/10 pt-4 text-xs leading-5 text-emerald-100/60">
+            These are suggested measures, not promised results. Your progress stays in your control.
+          </p>
+        </aside>
       </section>
 
       <section className="mt-14">
