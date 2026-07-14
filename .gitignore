@@ -1,0 +1,12 @@
+node_modules/
+.pnpm-store/
+.next/
+dist/
+.wrangler/
+out/
+.env
+.env.local
+.env.*.local
+*.log
+*.tsbuildinfo
+demo-screenshots/02-nutrition-label-result.png

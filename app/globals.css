@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --background: #f4f7f2;
+  --foreground: #172018;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(157, 198, 165, 0.22), transparent 32rem),
+    var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+@keyframes reel-float-one {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(80px, 80px, 0) scale(1.25); }
+}
+
+@keyframes reel-float-two {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.15); }
+  50% { transform: translate3d(-90px, 55px, 0) scale(0.85); }
+}
+
+@keyframes reel-ring-pulse {
+  0%, 100% { opacity: 0.35; transform: translateX(-50%) scale(0.7); }
+  50% { opacity: 0.85; transform: translateX(-50%) scale(1.2); }
+}
+
+@keyframes reel-symbol-breathe {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+}
+
+@keyframes reel-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+.reel-orb-one { animation: reel-float-one 7s ease-in-out infinite; }
+.reel-orb-two { animation: reel-float-two 8s ease-in-out infinite; }
+.reel-ring { animation: reel-ring-pulse 4s ease-in-out infinite; }
+.reel-symbol { animation: reel-symbol-breathe 3s ease-in-out infinite; }
+.reel-progress { animation: reel-progress 10s linear infinite; }
+[data-playing="false"] .reel-motion { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-motion { animation: none !important; }
+}
