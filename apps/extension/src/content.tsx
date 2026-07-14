@@ -101,7 +101,13 @@ function mount(container: HTMLElement) {
   cleanup.set(container, () => { visibilityObserver.unobserve(container); container.removeEventListener("doomless:visible", visible); container.removeEventListener("mouseenter", enter); container.removeEventListener("mouseleave", leave); root.unmount(); host.remove(); });
 }
 
-function scan(root: ParentNode = document) { findReelContainers(root).forEach(mount); }
+function scan(root: ParentNode = document) {
+  const containers = findReelContainers(root);
+  containers.forEach(mount);
+  if (containers.length > 0) {
+    void chromeApi.storage.local.set({ runtimeStatus: { lastSeenAt: new Date().toISOString(), url: location.href, reelContainersDetected: containers.length } });
+  }
+}
 scan();
 const observer = new MutationObserver((mutations) => {
   for (const mutation of mutations) for (const node of Array.from(mutation.addedNodes)) if (node instanceof HTMLElement) scan(node);

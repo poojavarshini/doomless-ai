@@ -50,8 +50,21 @@ export async function extractReelMetadata(container: HTMLElement): Promise<ReelM
 }
 
 export function findReelContainers(root: ParentNode = document): HTMLElement[] {
-  const videos = Array.from(root.querySelectorAll<HTMLVideoElement>("video"));
-  return uniqueElements(videos.map((video) => video.closest<HTMLElement>("article") ?? video.parentElement).filter(Boolean) as HTMLElement[]);
+  const self = root instanceof HTMLVideoElement ? [root] : [];
+  const videos = [...self, ...Array.from(root.querySelectorAll<HTMLVideoElement>("video"))];
+  return uniqueElements(videos.map(findBestContainer).filter(Boolean) as HTMLElement[]);
+}
+
+function findBestContainer(video: HTMLVideoElement): HTMLElement | null {
+  let current = video.parentElement;
+  let fallback = current;
+  for (let depth = 0; current && depth < 8; depth += 1, current = current.parentElement) {
+    if (current.matches("article, [role='dialog']")) return current;
+    if (current.querySelector('a[href*="/reel/"]')) fallback = current;
+    const rect = current.getBoundingClientRect();
+    if (fallback === current && rect.width >= 280 && rect.height >= 400) return current;
+  }
+  return fallback;
 }
 
 function uniqueElements(elements: HTMLElement[]) {

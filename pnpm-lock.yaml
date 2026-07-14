@@ -81,6 +81,9 @@ importers:
 
   apps/extension:
     dependencies:
+      '@doomless/scoring':
+        specifier: workspace:*
+        version: link:../../packages/scoring
       '@doomless/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types

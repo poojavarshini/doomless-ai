@@ -1,5 +1,6 @@
 import { nutritionAnalysisSchema, type HistoryRecord, type ReelMetadata } from "@doomless/shared-types";
 import { chromeApi } from "./chrome";
+import { buildMetadataFallback } from "./fallback";
 import { getCached, getSettings, saveAnalysis } from "./storage";
 
 type AnalyzeMessage = { type: "ANALYZE_REEL"; metadata: ReelMetadata };
@@ -62,10 +63,12 @@ async function performAnalysis(metadata: ReelMetadata) {
   } catch (error) {
     const stale = await getCached(metadata.reelId);
     if (stale) return { ok: true, analysis: stale, cached: true, stale: true };
-    if (error instanceof DOMException && error.name === "AbortError") {
-      return { ok: false, error: "Analysis timed out. Retry when your connection is stable." };
-    }
-    return { ok: false, error: error instanceof Error ? error.message : "You appear to be offline." };
+    const cause = error instanceof DOMException && error.name === "AbortError"
+      ? "The live analysis timed out."
+      : error instanceof Error ? error.message : "The live analysis service is offline.";
+    const fallback = buildMetadataFallback(metadata, settings.preferences, cause);
+    await saveAnalysis({ reelId: metadata.reelId, metadata, analysis: fallback, analyzedAt: new Date().toISOString() });
+    return { ok: true, analysis: fallback, cached: false, fallback: true };
   } finally {
     clearTimeout(timeout);
   }

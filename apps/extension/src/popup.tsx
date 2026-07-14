@@ -8,7 +8,8 @@ import "./ui.css";
 function Popup() {
   const [history, setHistory] = useState<HistoryRecord[]>([]);
   const [settings, setSettings] = useState<ExtensionSettings | null>(null);
-  useEffect(() => { void Promise.all([getSettings(), chromeApi.storage.local.get("history")]).then(([next, stored]) => { setSettings(next); setHistory((stored.history as HistoryRecord[] | undefined) ?? []); }); }, []);
+  const [runtimeStatus, setRuntimeStatus] = useState<{ lastSeenAt?: string; reelContainersDetected?: number } | null>(null);
+  useEffect(() => { void Promise.all([getSettings(), chromeApi.storage.local.get(["history", "runtimeStatus"])]).then(([next, stored]) => { setSettings(next); setHistory((stored.history as HistoryRecord[] | undefined) ?? []); setRuntimeStatus((stored.runtimeStatus as typeof runtimeStatus) ?? null); }); }, []);
   const today = new Date().toDateString();
   const todays = useMemo(() => history.filter((item) => new Date(item.analyzedAt).toDateString() === today), [history, today]);
   const average = todays.length ? Math.round(todays.reduce((sum, item) => sum + item.analysis.overallScore, 0) / todays.length) : 0;
@@ -23,6 +24,7 @@ function Popup() {
   return <main className="panel popup">
     <header><div><span className="eyebrow">DoomLess</span><h1>Today’s nutrition</h1></div><button className={settings?.enabled ? "toggle on" : "toggle"} onClick={() => void toggle()} aria-pressed={settings?.enabled}>{settings?.enabled ? "On" : "Off"}</button></header>
     {!settings?.enabled && <p className="notice">Analysis is privacy-off by default. Turn it on when you want DoomLess to read supported Reel metadata.</p>}
+    <p className="notice">Instagram detector: {runtimeStatus?.lastSeenAt ? `active · ${runtimeStatus.reelContainersDetected ?? 0} Reel container(s) seen` : "not seen yet — reload the Instagram tab after installing or updating"}</p>
     <section className="stats"><article><b>{todays.length}</b><span>Analyzed</span></article><article><b>{average}</b><span>Avg score</span></article><article><b>{Math.round(savedSeconds / 60)}m</b><span>Attention saved*</span></article></section>
     <p className="fine">*Estimate based on skipped Reel duration.</p>
     <h2>Recent labels</h2>

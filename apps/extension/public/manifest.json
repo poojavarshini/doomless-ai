@@ -1,18 +1,18 @@
 {
   "manifest_version": 3,
   "name": "DoomLess Digital Wellness AI",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Digital Nutrition Labels for Instagram Reels.",
   "permissions": ["storage"],
   "host_permissions": [
-    "https://www.instagram.com/*",
+    "https://*.instagram.com/*",
     "http://localhost:3000/*",
     "https://*.chatgpt.site/*"
   ],
   "background": { "service_worker": "background.js", "type": "module" },
   "content_scripts": [
     {
-      "matches": ["https://www.instagram.com/*"],
+      "matches": ["https://*.instagram.com/*"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }

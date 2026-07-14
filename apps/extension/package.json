@@ -1,6 +1,6 @@
 {
   "name": "@doomless/extension",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@doomless/scoring": "workspace:*",
     "@doomless/shared-types": "workspace:*",
     "react": "19.2.6",
     "react-dom": "19.2.6",
