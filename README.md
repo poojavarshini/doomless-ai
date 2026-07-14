@@ -1,56 +1,119 @@
-# DoomLess AI
+# DoomLess Digital Wellness AI
 
-A digital-wellbeing prototype that adds a clear "nutrition label" to short-form
-videos. Users can submit a transcript or video URL and review seven scores:
-Learning, Usefulness, Mind Impact, Quality, Personal Relevance, Time Worth, and
-Scroll Risk.
+DoomLess is a privacy-first Digital Nutrition layer for Instagram Reels. It turns available caption and page metadata into an explainable 0–100 score, an attention-cost estimate, and a conscious choice: watch, save, limit, or skip.
 
-## Live demo
+## Why
 
-### [Try DoomLess AI →](https://doomless-ai-demo.poojavarshini1995.chatgpt.site)
+Short-form feeds make popularity visible but hide attention cost. DoomLess makes the tradeoff legible without calling entertainment bad or shaming the viewer.
 
-The public demo includes five Instagram Reel examples and five YouTube Shorts
-examples. Select a demo video to see all seven nutrition-label scores and their
-explanations—no installation or API key is required.
+## Working MVP
 
-![DoomLess AI nutrition label](demo-screenshots/02-nutrition-label-top.png)
-
-## Features
-
-- Transcript and video-URL input modes
-- Structured, validated scoring through the OpenAI Responses API
-- Seven scores with one-sentence explanations
-- Clear handling for API-key, quota, and model errors
-- Five Instagram and five YouTube Shorts demo URLs with deterministic labels
-- Production-safe labels for the ten curated demo videos
-- Animated demo feed cards grouped by content category
+- Manifest V3 Chrome extension for Instagram desktop
+- Defensive Reel discovery with `MutationObserver` and active-Reel detection with `IntersectionObserver`
+- Manual, 800 ms hover, and active-visible triggers; automatic analysis is off by default
+- Caption, creator, hashtag, visible-text, accessibility-label, duration, and displayed-engagement extraction
+- Server-only OpenAI Responses API integration with strict Zod structured output
+- Deterministic 0–100 formula and risk-aware recommendation overrides
+- Expandable, keyboard-accessible Shadow DOM overlay that does not inherit Instagram styles
+- Chrome local cache, duplicate-request prevention, local history, actions, preferences, and compact daily dashboard
+- Timeout, retry, invalid-response, cached fallback, and offline messaging
+- Existing interactive web demo with curated short-form examples
 
 ## Architecture
 
-- `app/page.tsx`: client-side input form, request state, result panel, and ten-video feed.
-- `components/NutritionLabel.tsx`: reusable, typed score-card component.
-- `app/api/analyze/route.ts`: validates requests and calls the OpenAI Responses API.
-- `lib/scoring.ts`: Zod schemas and the neutral wellbeing scoring prompt.
-- `lib/nutrition.ts`: shared frontend types and display metadata.
-- `lib/demo-videos.ts`: the curated videos and deterministic demo labels.
-- `lib/demo-labels.ts`: demo matching and local smoke-test fallback data.
+```mermaid
+flowchart LR
+  IG[Instagram Reel DOM] --> CS[MV3 content script]
+  CS -->|metadata only| BG[service worker]
+  BG -->|cache miss| API[Next.js API route]
+  API --> AI[OpenAI Responses API]
+  AI -->|strict JSON| API
+  API -->|validated + policy score| BG
+  BG --> LS[Chrome local storage]
+  BG --> CS
+  CS --> UI[Shadow DOM nutrition label]
+  LS --> POP[Popup dashboard + settings]
+```
 
-The API key remains server-side and is never included in client code.
+See [architecture.md](docs/architecture.md) for source boundaries and data flow.
+
+## Repository
+
+```text
+apps/extension/       Chrome MV3 extension
+app/                  Hosted Next.js dashboard and API
+packages/scoring/     Formula, recommendation, and relevance rules
+packages/shared-types Strict request, response, preferences, and history types
+docs/                 Architecture, privacy, limitations, demo, and test guidance
+```
 
 ## Run locally
 
-1. Install dependencies with `pnpm install`.
-2. Create an ignored `.env.local` file containing `OPENAI_API_KEY=your_key`.
-3. Optionally set `OPENAI_MODEL`; the default is `gpt-5.6-luna`.
-4. Run `pnpm dev` and open `http://localhost:3000`.
+Requirements: Node.js 22+, pnpm, Chrome, and an OpenAI API key.
 
-## Prototype limitation
+1. Copy `.env.example` to `.env.local` and add `OPENAI_API_KEY`.
+2. Run `pnpm install`.
+3. Run `pnpm dev` to start the API and web demo at `http://localhost:3000`.
+4. Run `pnpm build:extension`.
+5. Open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and select `apps/extension/dist`.
+6. Open the extension settings, enable analysis, keep the backend URL as `http://localhost:3000`, then open Instagram Reels.
 
-The route does not scrape or transcribe third-party video URLs. URL-only analysis
-therefore produces a conservative label unless usable content is available to the
-model. Transcript input is the reliable path for this scaffold.
+The extension requests only `storage` plus host access to Instagram, localhost, and the hosted demo domain. The OpenAI key never enters extension code.
 
-## Security
+## AI pipeline
 
-Never commit `.env`, `.env.local`, or API credentials. Environment files are
-ignored by Git, and the OpenAI API key is used only by the server-side route.
+1. Extract only data visibly available in the current Reel container.
+2. Build a stable Reel ID from the `/reel/{id}` path or a SHA-256 metadata hash.
+3. Return a cached analysis when present.
+4. Validate the request, send available evidence and relevance preferences to GPT-5.6 Luna by default, and require strict JSON.
+5. Validate the response again, recompute the transparent product score, and apply recommendation overrides.
+6. Save the result and the user's action locally.
+
+The formula is in `packages/scoring/src/index.ts`. Positive weights total 1.0; risk penalties total 0.25. The raw -25…100 range is shifted and normalized to 0…100.
+
+## Commands
+
+- `pnpm dev` — local API and web demo
+- `pnpm build` — production Sites/Cloudflare build
+- `pnpm build:extension` — unpacked Chrome extension bundle
+- `pnpm typecheck` — web and extension TypeScript checks
+- `pnpm test` — formula, schema, relevance, recommendation, identity, and cache tests
+- `pnpm lint` — repository lint
+
+## Live, permission-gated, demo, and future
+
+| Capability | Status |
+|---|---|
+| Caption/creator/visible metadata analysis | Live, selector-defensive but Instagram-dependent |
+| Automatic hover/visible analysis | Live only after the user enables it |
+| Private Reel analysis | Automatic analysis blocked; explicit flow is intentionally conservative |
+| Audio/transcript extraction | Only used if Instagram exposes text; no media scraping |
+| Screenshot/frame analysis | Future permission-gated enhancement |
+| Curated judge flow | Existing interactive web demo; clearly presented as demo content |
+
+## Privacy and limitations
+
+History and preferences stay in Chrome local storage. Supported Reel metadata is sent only after the user enables analysis or presses Analyze. Read [privacy.md](docs/privacy.md) and [limitations.md](docs/limitations.md).
+
+## Demo
+
+Use [demo-script.md](docs/demo-script.md) for the three-minute judging flow and [test-checklist.md](docs/test-checklist.md) for Instagram verification. Existing recording assets and screenshot guidance are documented in the demo script.
+
+## Roadmap
+
+1. Migrate the existing web demo cards to the new 0–100 shared contract and add six canonical demo fixtures.
+2. Add a full weekly analytics route and saved-Reels library.
+3. Add an explicit `activeTab` screenshot permission flow for optional multimodal analysis.
+4. Add selector telemetry without collecting browsing content, and browser integration automation against a local Instagram fixture.
+5. Add user-controlled replacement recommendations.
+
+## Hackathon alignment
+
+- **Technology:** MV3 lifecycle, live DOM detection, strict AI output, deterministic scoring, caching, privacy controls.
+- **Design:** label-to-action flow, explainability, onboarding settings, compact behavioral dashboard, failure states.
+- **Impact:** makes invisible attention costs visible and supports intentional consumption.
+- **Idea quality:** separates intrinsic value, personal relevance, and behavioral risk.
+
+## How Codex and GPT-5.6 were used
+
+Codex audited and implemented the extension architecture, shared types, score policy, reliability controls, tests, and documentation. GPT-5.6 Luna is the default runtime analyst because this high-volume classification task benefits from the cost-sensitive GPT-5.6 tier. The server uses structured outputs and never delegates the published score formula to the model alone.

@@ -5,10 +5,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "vinext build",
+    "build:extension": "pnpm --dir apps/extension build",
+    "typecheck": "tsc --noEmit && pnpm --dir apps/extension typecheck",
+    "test": "vitest run --config vitest.config.ts --configLoader runner",
     "start": "next start",
     "lint": "eslint ."
   },
   "dependencies": {
+    "@doomless/scoring": "workspace:*",
+    "@doomless/shared-types": "workspace:*",
     "@tailwindcss/postcss": "^4.0.0",
     "next": "16.2.6",
     "openai": "^6.0.0",
@@ -28,6 +33,7 @@
     "eslint-config-next": "16.2.6",
     "react-server-dom-webpack": "19.2.6",
     "typescript": "5.9.3",
+    "vitest": "^3.2.4",
     "vinext": "0.0.50",
     "vite": "8.0.13",
     "wrangler": "4.92.0"
