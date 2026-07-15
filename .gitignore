@@ -13,6 +13,14 @@ output/
 .env.*.local
 *.log
 *.tsbuildinfo
+__pycache__/
+*.py[cod]
+.video-tools/
+video-production/work/
+video-draft/
+!video-production/output/
+video-production/output/*
+!video-production/output/DoomLess_AI_3min_Draft_2_Female_Voice.mp4
 demo-screenshots/02-nutrition-label-result.png
 public/doomless-ai-beta-v*.zip
 !public/doomless-ai-beta-v0.4.2.zip
