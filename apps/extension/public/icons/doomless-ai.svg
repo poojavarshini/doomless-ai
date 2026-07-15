@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="DoomLess AI">
+  <defs>
+    <linearGradient id="bg" x1="16" y1="12" x2="112" y2="116" gradientUnits="userSpaceOnUse"><stop stop-color="#103c32"/><stop offset="1" stop-color="#071c18"/></linearGradient>
+    <linearGradient id="leaf" x1="38" y1="30" x2="91" y2="98" gradientUnits="userSpaceOnUse"><stop stop-color="#b7f7d4"/><stop offset="1" stop-color="#35d491"/></linearGradient>
+  </defs>
+  <rect x="5" y="5" width="118" height="118" rx="30" fill="url(#bg)"/>
+  <path d="M39 32h25c22 0 36 12 36 32S86 96 64 96H39V32Zm17 16v32h8c12 0 19-6 19-16s-7-16-19-16h-8Z" fill="#f6fffb"/>
+  <path d="M76 75c12-2 21-10 25-24 5 16-1 30-18 35-7 2-13 0-17-3 3-4 6-6 10-8Z" fill="url(#leaf)"/>
+  <path d="M67 87c7-10 17-17 30-23" fill="none" stroke="#0d4939" stroke-width="4" stroke-linecap="round"/>
+  <path d="M101 25l2.5 7.5L111 35l-7.5 2.5L101 45l-2.5-7.5L91 35l7.5-2.5L101 25Z" fill="#f6c85f"/>
+</svg>

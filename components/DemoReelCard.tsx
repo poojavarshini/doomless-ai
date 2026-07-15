@@ -44,7 +44,10 @@ export function DemoReelCard({
   onAnalyze,
 }: DemoReelCardProps) {
   const [playing, setPlaying] = useState(true);
-  const theme = visualThemes[video.topic];
+  const theme = visualThemes[video.topic] ?? {
+    gradient: "from-emerald-950 via-teal-700 to-sky-300",
+    kicker: "See the decision, not just a score",
+  };
   const platformLabel = video.platform === "instagram" ? "Instagram Reel" : "YouTube Short";
 
   return (
@@ -92,9 +95,9 @@ export function DemoReelCard({
           <p className="mt-2 line-clamp-2 text-xs leading-5 text-white/70">{video.description}</p>
 
           <div className="mt-3 flex gap-1.5 text-[10px] font-semibold">
-            <span className="rounded-full bg-white/15 px-2 py-1">Learn {video.label.scores.learning}</span>
-            <span className="rounded-full bg-white/15 px-2 py-1">Mind {video.label.scores.mind_impact}</span>
-            <span className="rounded-full bg-white/15 px-2 py-1">Risk {video.label.scores.scroll_risk}</span>
+            <span className="rounded-full bg-white/15 px-2 py-1">Learn {video.label.categories.learningValue.score}</span>
+            <span className="rounded-full bg-white/15 px-2 py-1">Mood {video.label.categories.emotionalImpact.score}</span>
+            <span className="rounded-full bg-white/15 px-2 py-1">Risk {video.label.categories.addictionRisk.score}</span>
           </div>
 
           <button

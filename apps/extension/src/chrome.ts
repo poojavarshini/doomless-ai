@@ -17,6 +17,7 @@ interface ChromeLike {
   runtime: {
     sendMessage(message: unknown): Promise<unknown>;
     openOptionsPage(): Promise<void>;
+    getURL(path: string): string;
     onMessage: { addListener(listener: MessageListener): void };
   };
 }

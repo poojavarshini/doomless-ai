@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { stableHash } from "./reels";
-import { cacheKey, mergeHistory } from "./storage";
+import { cacheKey, defaultSettings, mergeHistory, resolveSettings } from "./storage";
 import type { HistoryRecord } from "@doomless/shared-types";
 
 describe("Reel identity and cache", () => {
@@ -10,12 +10,25 @@ describe("Reel identity and cache", () => {
   });
 
   it("uses a namespaced cache key", () => {
-    expect(cacheKey("abc")).toBe("cache:abc");
+    expect(cacheKey("abc")).toBe("cache:v4:abc");
   });
 
   it("deduplicates history by Reel id", () => {
     const record = { reelId: "abc", analyzedAt: "2026-01-01" } as HistoryRecord;
     expect(mergeHistory([record], { ...record, analyzedAt: "2026-01-02" })).toHaveLength(1);
     expect(mergeHistory([record], { ...record, analyzedAt: "2026-01-02" })[0]?.analyzedAt).toBe("2026-01-02");
+  });
+
+  it("migrates legacy beta installs away from localhost", () => {
+    const result = resolveSettings({ apiBaseUrl: "http://localhost:3000" });
+    expect(result.migratedFromLocalhost).toBe(true);
+    expect(result.settings.apiBaseUrl).toBe(defaultSettings.apiBaseUrl);
+    expect(result.settings.apiBaseUrl).toMatch(/^https:/);
+  });
+
+  it("activates visible-Reel analysis for previously enabled compact beta installs", () => {
+    const result = resolveSettings({ settingsVersion: 3, enabled: true, analyzeVisible: false });
+    expect(result.migratedAnalyzeVisible).toBe(true);
+    expect(result.settings.analyzeVisible).toBe(true);
   });
 });

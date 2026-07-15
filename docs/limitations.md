@@ -1,12 +1,13 @@
 # Known limitations
 
 - Instagram has no stable public DOM contract for Reels. Detection is defensive, but selectors may require updates.
-- The MVP does not scrape video files, bypass access controls, call private Instagram APIs, or claim reliable transcript access.
-- Caption-only analysis cannot assess actual visuals, audio, pacing, loops, factual accuracy, or delivery. Confidence and missing-information fields must reflect that.
-- `isPrivate` detection is heuristic. Automatic analysis is blocked on a private-content signal, but users should avoid analyzing content they do not have permission to send.
-- The first extension popup provides daily summary metrics, not the complete weekly dashboard requested for a later phase.
-- The existing hosted demo uses an older seven-score web presentation. Migration to the shared 0–100 extension contract and six canonical fixtures is the next demo-polish task.
-- “Replace with Better Content” records intent but does not yet fetch a replacement recommendation.
-- “Show Less Like This” records the action; automatic preference learning is intentionally minimal in this first slice.
-- Attention saved and useful seconds are transparent estimates, not scientific measurements.
-- Host permissions currently cover localhost and `*.chatgpt.site`; a different backend origin requires a manifest change or a future optional-host permission flow.
+- The MVP does not scrape video files, bypass access controls, use private Instagram APIs, or claim reliable transcript access.
+- Caption-only analysis cannot assess frames, audio, pacing, loops, delivery, or factual accuracy. It therefore returns low confidence and `ANALYZE_MORE` rather than a precise decision.
+- Private-content detection is heuristic. Automatic analysis is blocked on a private signal; users should not send content they lack permission to analyze.
+- Screenshot-assisted multimodal analysis is represented in the schema but is not implemented in this beta.
+- The popup provides daily and seven-day summary KPIs, exposure counts, recent decisions, and topic mix—not a research-grade analytics suite.
+- Demo mode contains six simulated fixtures. It uses the real schema and policy but does not describe the Reel underneath the overlay.
+- “Replace with Better Content” records intent but does not fetch a replacement recommendation yet.
+- “Show Less Like This” records the action; automatic preference learning remains deliberately lightweight.
+- Attention saved, useful seconds, and filler seconds are transparent product estimates, not scientific measurements.
+- Host permissions cover Instagram, localhost, and `*.chatgpt.site`; another backend origin requires a manifest update.

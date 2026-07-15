@@ -13,13 +13,20 @@ export async function extractReelMetadata(container: HTMLElement): Promise<ReelM
   const url = link ? new URL(link.href, location.origin).href : location.href;
   const text = container.innerText?.trim() ?? "";
   const lines = unique(text.split("\n")).slice(0, 60);
-  const labels = unique(
-    Array.from(container.querySelectorAll<HTMLElement>("[aria-label]"))
+  const labels = unique([
+    ...Array.from(container.querySelectorAll<HTMLElement>("[aria-label]"))
       .map((element) => element.getAttribute("aria-label") ?? ""),
-  ).slice(0, 60);
-  const creatorLink = container.querySelector<HTMLAnchorElement>('a[href^="/"]:not([href*="/reel/"])');
+    ...Array.from(container.querySelectorAll<HTMLImageElement>("img[alt]"))
+      .map((element) => element.alt),
+  ]).slice(0, 60);
+  const creatorLink = Array.from(container.querySelectorAll<HTMLAnchorElement>('a[href^="/"]'))
+    .find((anchor) => /^\/[A-Za-z0-9._]+\/?(?:\?|$)/.test(anchor.getAttribute("href") ?? "") && !/^\/(reel|reels|explore|direct|accounts)\b/.test(anchor.getAttribute("href") ?? ""));
   const creator = creatorLink?.textContent?.trim() || "Unknown creator";
-  const caption = lines.find((line) => line.length > 25 && !/^\d+[KMB]?$/i.test(line)) ?? "";
+  const pageDescription = document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.content ?? "";
+  const describedCaption = pageDescription.match(/[“\"](.{20,2000})[”\"]/)?.[1] ?? "";
+  const captionCandidates = unique([describedCaption, ...lines])
+    .filter((line) => line.length > 20 && !isInstagramUiText(line, creator));
+  const caption = captionCandidates.sort((a, b) => b.length - a.length)[0]?.slice(0, 8_000) ?? "";
   const hashtags = unique((`${caption} ${text}`.match(/#[\p{L}\p{N}_]+/gu) ?? []).map((tag) => tag.slice(1)));
   const video = container.querySelector<HTMLVideoElement>("video");
   const durationSeconds = video && Number.isFinite(video.duration) ? Math.round(video.duration) : undefined;
@@ -49,6 +56,12 @@ export async function extractReelMetadata(container: HTMLElement): Promise<ReelM
   };
 }
 
+function isInstagramUiText(value: string, creator: string) {
+  const compact = value.trim();
+  if (compact === creator || /^\d+(?:[.,]\d+)?[KMB]?$/i.test(compact)) return true;
+  return /^(follow|following|like|comment|share|save|more|original audio|see translation|suggested for you)$/i.test(compact);
+}
+
 export function findReelContainers(root: ParentNode = document): HTMLElement[] {
   const self = root instanceof HTMLVideoElement ? [root] : [];
   const videos = [...self, ...Array.from(root.querySelectorAll<HTMLVideoElement>("video"))];
@@ -57,14 +70,31 @@ export function findReelContainers(root: ParentNode = document): HTMLElement[] {
 
 function findBestContainer(video: HTMLVideoElement): HTMLElement | null {
   let current = video.parentElement;
-  let fallback = current;
-  for (let depth = 0; current && depth < 8; depth += 1, current = current.parentElement) {
-    if (current.matches("article, [role='dialog']")) return current;
-    if (current.querySelector('a[href*="/reel/"]')) fallback = current;
+  let best = current;
+  let bestScore = Number.NEGATIVE_INFINITY;
+  for (let depth = 0; current && depth < 12; depth += 1, current = current.parentElement) {
     const rect = current.getBoundingClientRect();
-    if (fallback === current && rect.width >= 280 && rect.height >= 400) return current;
+    const videoCount = current.querySelectorAll("video").length;
+    const textLength = (current.innerText ?? "").trim().length;
+    const isReasonableReelSurface = rect.width >= 280
+      && rect.height >= 360
+      && rect.width <= Math.max(1_100, window.innerWidth)
+      && rect.height <= window.innerHeight * 1.8
+      && videoCount <= 1;
+    if (isReasonableReelSurface) {
+      const score = Math.min(80, textLength / 4)
+        + (current.matches("article, [role='dialog']") ? 140 : 0)
+        + (current.querySelector('a[href*="/reel/"]') ? 90 : 0)
+        + (current.querySelector("[aria-label], img[alt]") ? 20 : 0)
+        - depth;
+      if (score > bestScore) {
+        best = current;
+        bestScore = score;
+      }
+    }
+    if (current === document.body) break;
   }
-  return fallback;
+  return best;
 }
 
 function uniqueElements(elements: HTMLElement[]) {

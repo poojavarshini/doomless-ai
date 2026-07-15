@@ -1,12 +1,33 @@
 import { z } from "zod";
 
-export const recommendationSchema = z.enum(["WATCH", "SKIP", "SAVE", "LIMIT"]);
+export const recommendationActionSchema = z.enum([
+  "WATCH",
+  "WATCH_FOR_FUN",
+  "SAVE_FOR_LATER",
+  "SKIM",
+  "SKIP",
+  "ANALYZE_MORE",
+]);
+export const contentClassificationTypeSchema = z.enum([
+  "PRACTICAL_LEARNING",
+  "EXPLANATION",
+  "NEWS_OR_INFORMATION",
+  "INSPIRATION",
+  "ENTERTAINMENT",
+  "PROMOTION",
+  "OPINION",
+  "CLICKBAIT",
+  "REPETITIVE_LOW_VALUE",
+  "UNKNOWN",
+]);
 export const analysisSourceSchema = z.enum(["live", "partial", "screenshot", "demo"]);
+export const analysisModeSchema = z.enum(["FULL", "METADATA_ONLY", "SCREENSHOT_ASSISTED", "DEMO"]);
 export const scoreSchema = z.number().min(0).max(100);
 
 const categorySchema = z.object({
   score: scoreSchema,
   reason: z.string().trim().min(1).max(320),
+  evidence: z.array(z.string().trim().min(1).max(240)).max(5),
 });
 
 export const preferencesSchema = z.object({
@@ -42,38 +63,62 @@ export const analysisRequestSchema = z.object({
 
 export const nutritionAnalysisSchema = z.object({
   overallScore: scoreSchema,
-  recommendation: recommendationSchema,
-  confidence: scoreSchema,
-  attentionCost: z.object({
-    label: z.enum(["Low", "Medium", "High"]),
-    estimatedUsefulSeconds: z.number().min(0).max(3_600),
+  contentClassification: z.object({
+    type: contentClassificationTypeSchema,
+    label: z.string().trim().min(1).max(100),
+    reason: z.string().trim().min(1).max(320),
+  }),
+  recommendation: z.object({
+    action: recommendationActionSchema,
+    headline: z.string().trim().min(1).max(120),
+    reason: z.string().trim().min(1).max(320),
+  }),
+  attentionReturn: z.object({
+    level: z.enum(["HIGH", "MEDIUM", "LOW", "UNKNOWN"]),
+    label: z.string().trim().min(1).max(100),
     estimatedTotalSeconds: z.number().min(0).max(3_600),
+    estimatedUsefulSeconds: z.number().min(0).max(3_600),
+    estimatedFillerSeconds: z.number().min(0).max(3_600),
     valueRatio: z.number().min(0).max(1),
+    attentionSavedIfSkippedSeconds: z.number().min(0).max(3_600),
+    explanation: z.string().trim().min(1).max(320),
+  }),
+  userBenefit: z.object({
+    primaryBenefit: z.string().trim().min(1).max(200),
+    takeawayCount: z.number().int().min(0).max(20),
+    takeaways: z.array(z.string().trim().min(1).max(240)).max(3),
+    bestFor: z.string().trim().min(1).max(240),
+    notUsefulFor: z.string().trim().min(1).max(240),
+  }),
+  evidence: z.object({
+    confidence: scoreSchema,
+    level: z.enum(["HIGH", "MEDIUM", "LOW"]),
+    sourcesUsed: z.array(z.string().trim().min(1).max(160)).max(20),
+    sourcesMissing: z.array(z.string().trim().min(1).max(160)).max(20),
+    analysisMode: analysisModeSchema,
+    limitationMessage: z.string().trim().min(1).max(320),
   }),
   categories: z.object({
     learningValue: categorySchema,
     actionability: categorySchema,
-    relevance: categorySchema,
+    personalRelevance: categorySchema,
     timeEfficiency: categorySchema,
     emotionalImpact: categorySchema,
     clickbaitRisk: categorySchema,
     addictionRisk: categorySchema,
   }),
-  summary: z.string().trim().min(1).max(500),
   positiveSignals: z.array(z.string().max(240)).max(8),
   warningSignals: z.array(z.string().max(240)).max(8),
-  suggestedAction: z.string().trim().min(1).max(300),
-  contentType: z.string().trim().min(1).max(100),
-  topics: z.array(z.string().max(100)).max(15),
-  analysisSource: analysisSourceSchema,
-  availableSourceData: z.array(z.string().max(160)).max(20),
-  missingInformation: z.array(z.string().max(160)).max(20),
+  summary: z.string().trim().min(1).max(500),
+  suggestedUserAction: z.string().trim().min(1).max(300),
+  topics: z.array(z.string().max(100)).max(15).default([]),
 });
 
 export type UserPreferences = z.infer<typeof preferencesSchema>;
 export type ReelMetadata = z.infer<typeof reelMetadataSchema>;
 export type NutritionAnalysis = z.infer<typeof nutritionAnalysisSchema>;
-export type Recommendation = z.infer<typeof recommendationSchema>;
+export type RecommendationAction = z.infer<typeof recommendationActionSchema>;
+export type ContentClassificationType = z.infer<typeof contentClassificationTypeSchema>;
 
 export interface HistoryRecord {
   reelId: string;

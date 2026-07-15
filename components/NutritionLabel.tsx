@@ -1,89 +1,53 @@
 import {
-  categoryMeta,
-  scoreKeys,
-  type ScoreKey,
-  type VideoNutritionLabel,
-} from "@/lib/nutrition";
+  calculateOverallScore,
+  CATEGORY_GUIDE_CONFIG,
+  getCategoryInterpretation,
+  getKpiConclusion,
+  getScoreBand,
+} from "@doomless/scoring";
+import Link from "next/link";
+import { scoreKeys, type VideoNutritionLabel } from "@/lib/nutrition";
 
-export interface NutritionLabelProps {
-  label: VideoNutritionLabel;
-  title?: string;
-  compact?: boolean;
-}
+export interface NutritionLabelProps { label: VideoNutritionLabel; title?: string; compact?: boolean }
 
-function scoreTone(key: ScoreKey, value: number) {
-  const positiveValue = key === "scroll_risk" ? 10 - value : value;
-  if (positiveValue >= 7) return "bg-emerald-100 text-emerald-900";
-  if (positiveValue >= 4) return "bg-amber-100 text-amber-900";
-  return "bg-rose-100 text-rose-900";
-}
-
-export function NutritionLabel({
-  label,
-  title = "DoomLess nutrition label",
-  compact = false,
-}: NutritionLabelProps) {
-  const visibleKeys = compact
-    ? (["mind_impact", "time_worth", "scroll_risk"] as ScoreKey[])
-    : scoreKeys;
+export function NutritionLabel({ label, title = "DoomLess Digital Nutrition Label", compact = false }: NutritionLabelProps) {
+  const overallScore = calculateOverallScore(label.categories);
+  const band = getScoreBand(overallScore);
+  const provisional = label.evidence.analysisMode === "METADATA_ONLY";
+  const conclusion = getKpiConclusion(overallScore, label.categories, label.contentClassification.type, provisional);
+  const visibleKeys = compact ? (["learningValue", "timeEfficiency", "addictionRisk"] as const) : scoreKeys;
 
   return (
-    <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm" aria-label={title}>
-      <div className="mb-4 flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            DoomLess AI
-          </p>
-          <h2 className="mt-1 text-xl font-semibold">{title}</h2>
-        </div>
-        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
-          0–10
-        </span>
+    <section className="rounded-3xl border border-emerald-900/10 bg-emerald-950 p-5 text-white shadow-xl shadow-emerald-950/10" aria-label={title}>
+      <div className="flex items-center gap-3">
+        <img src="/doomless-ai-icon-128.png" alt="" className="size-10 rounded-xl" />
+        <strong className="text-sm">DoomLess Digital Nutrition</strong>
+        <span className="ml-auto text-2xl font-bold">{overallScore}<small className="text-xs text-emerald-100/50">/100</small></span>
       </div>
+      <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-300">{band.title}</p>
+      <p className="mt-1 text-base font-semibold leading-6">{conclusion}</p>
+      {!compact && <p className="mt-2 text-xs text-emerald-100/55">Higher Clickbait and Addiction scores mean greater risk.</p>}
 
-      {label.notice && (
-        <p className="mb-4 rounded-2xl bg-sky-50 p-3 text-sm leading-5 text-sky-900">
-          {label.notice}
-        </p>
-      )}
-
-      <div className="space-y-3">
+      <div className="mt-5 space-y-3 border-t border-white/10 pt-3">
         {visibleKeys.map((key) => {
-          const meta = categoryMeta[key];
-          const value = label.scores[key];
-
+          const category = CATEGORY_GUIDE_CONFIG[key];
+          const score = label.categories[key].score;
           return (
-            <div key={key} className="rounded-2xl bg-slate-50 p-3">
-              <div className="flex items-center justify-between gap-3">
-                <span className="font-medium">
-                  <span className="mr-2 text-slate-500" aria-hidden="true">{meta.icon}</span>
-                  {meta.label}
-                </span>
-                <span className={`rounded-full px-2.5 py-1 text-sm font-bold ${scoreTone(key, value)}`}>
-                  {value}/10
-                </span>
+            <div key={key} className="border-b border-white/8 pb-3 last:border-0">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-semibold">{category.label}</span>
+                {category.isRisk ? <span className="text-[0.62rem] font-bold uppercase tracking-wide text-rose-300">Risk</span> : null}
+                <strong className="ml-auto">{score}</strong>
               </div>
-              {!compact && (
-                <>
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-200">
-                    <div
-                      className="h-full rounded-full bg-slate-700"
-                      style={{ width: `${value * 10}%` }}
-                    />
-                  </div>
-                  <p className="mt-2 text-sm leading-5 text-slate-600">
-                    {label.explanations[key]}
-                  </p>
-                </>
-              )}
+              {!compact && <>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/12"><div className={category.isRisk ? "h-full rounded-full bg-gradient-to-r from-amber-400 to-rose-500" : "h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-200"} style={{ width: `${score}%` }} /></div>
+                <p className="mt-2 text-xs leading-5 text-emerald-50/70">{getCategoryInterpretation(key, score, provisional)}</p>
+              </>}
             </div>
           );
         })}
       </div>
-
-      <p className="mt-4 text-xs leading-5 text-slate-500">
-        Scores are estimates, not judgments. Scroll Risk is the only score where lower is better.
-      </p>
+      {!compact && <Link href="/score-guide" className="mt-4 inline-flex text-sm font-semibold text-emerald-300 underline decoration-emerald-300/40 underline-offset-4 hover:text-emerald-200">Understand this score</Link>}
     </section>
   );
 }
