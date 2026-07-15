@@ -1,0 +1,8 @@
+{
+  "name": "@doomless/scoring",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "dependencies": { "@doomless/shared-types": "workspace:*" }
+}

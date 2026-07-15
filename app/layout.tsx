@@ -10,9 +10,9 @@ export async function generateMetadata(): Promise<Metadata> {
     "doomless-ai-demo.poojavarshini1995.chatgpt.site";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
   const origin = `${protocol}://${host}`;
-  const title = "DoomLess AI - Know what your feed is feeding you";
+  const title = "DoomLess AI — Digital Nutrition for Instagram Reels";
   const description =
-    "A digital wellbeing nutrition label for short-form video, with productivity-focused KPIs.";
+    "Download the DoomLess AI Chrome beta and get an evidence-aware watch, save, skim, skip, or analyze-more decision for Instagram Reels.";
 
   return {
     title,
@@ -22,13 +22,13 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       type: "website",
       url: origin,
-      images: [{ url: `${origin}/og.png`, width: 1536, height: 1024, alt: "DoomLess AI video nutrition label" }],
+      images: [{ url: `${origin}/og-beta.png`, width: 1536, height: 1024, alt: "DoomLess AI Chrome beta digital nutrition label" }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [`${origin}/og.png`],
+      images: [`${origin}/og-beta.png`],
     },
   };
 }

@@ -1,0 +1,11 @@
+DOOMLESS AI — CHROME BETA
+
+1. Unzip this download to a permanent folder.
+2. Open chrome://extensions in Chrome.
+3. Turn on Developer mode, choose Load unpacked, and select the unzipped folder.
+4. Open or reload Instagram Reels and pin DoomLess AI from the Extensions menu.
+
+Privacy: DoomLess AI reads supported Reel metadata only after analysis is enabled or requested.
+Beta feedback: https://github.com/poojavarshini/doomless-ai/issues/new
+
+Chrome Web Store one-click installation is planned after beta validation and store review.

@@ -1,0 +1,16 @@
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.brand-lockup img {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px #0f3d3126;
+}
+
+.brand-lockup h1 {
+  margin-bottom: 0;
+}
