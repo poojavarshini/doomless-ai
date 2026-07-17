@@ -1,0 +1,114 @@
+{
+  "duration": 180,
+  "voice": "en-US-JennyNeural",
+  "chapters": [
+    {
+      "id": "01-elevator-pitch",
+      "start": 0.4,
+      "targetDuration": 10.0,
+      "script": "Welcome to DoomLess AI, an AI-powered Apps for Your Life platform. Digital Nutrition Labels turn mindless scrolling into intentional digital habits."
+    },
+    {
+      "id": "02-problem",
+      "start": 10.4,
+      "targetDuration": 9.0,
+      "script": "Meet Maya. She opens Instagram to learn, but keeps scrolling because platforms maximize attention, not value."
+    },
+    {
+      "id": "03-core-idea",
+      "start": 20.4,
+      "targetDuration": 9.0,
+      "script": "Reddit users echo Maya's experience: losing hours, struggling to focus, and feeling exhausted after doomscrolling."
+    },
+    {
+      "id": "04-existing-tools",
+      "start": 30.4,
+      "targetDuration": 9.0,
+      "script": "Current wellbeing apps tell us how long we've been scrolling. DoomLess asks a better question—was this content actually worth your attention?"
+    },
+    {
+      "id": "05-why-time-is-not-enough",
+      "start": 40.4,
+      "targetDuration": 9.0,
+      "script": "DoomLess adds Digital Nutrition Labels to short-form content, showing people what they're about to consume before spending attention."
+    },
+    {
+      "id": "06-nutrition-metrics",
+      "start": 50.4,
+      "targetDuration": 9.0,
+      "script": "DoomLess scores learning, relevance, usefulness, emotional impact, efficiency, clickbait, and addiction risk—making attention measurable."
+    },
+    {
+      "id": "07-live-detection",
+      "start": 60.4,
+      "targetDuration": 9.0,
+      "script": "GPT-5.6 transforms available Reel context into simple, structured, explainable insights people can understand."
+    },
+    {
+      "id": "08-compact-result",
+      "start": 70.4,
+      "targetDuration": 9.0,
+      "script": "Chrome detects the active Reel, sends metadata through its service worker, and displays the cached AI score directly on Instagram."
+    },
+    {
+      "id": "09-expanded-result",
+      "start": 80.4,
+      "targetDuration": 9.0,
+      "script": "Maya opens Instagram for something useful. DoomLess detects the Reel, analyzes it, and displays a Digital Nutrition Label."
+    },
+    {
+      "id": "10-decision",
+      "start": 90.4,
+      "targetDuration": 9.0,
+      "script": "Maya sees the Digital Nutrition Score, confidence, attention cost, and one clear decision: Watch, Save for Later, Entertainment, or Skip."
+    },
+    {
+      "id": "11-personalization",
+      "start": 100.4,
+      "targetDuration": 9.0,
+      "script": "The score becomes a transparent choice. Maya can see why the Reel earned its rating before deciding whether it deserves her attention."
+    },
+    {
+      "id": "12-kpis",
+      "start": 110.4,
+      "targetDuration": 9.0,
+      "script": "After repeated low-value Reels, DoomLess recognizes the pattern and gently asks whether Maya wants to exit the scrolling loop."
+    },
+    {
+      "id": "13-ai-flow",
+      "start": 120.4,
+      "targetDuration": 9.0,
+      "script": "Maya exits scroll-bait and returns to conscious learning. Her summary shows useful content and estimated attention saved."
+    },
+    {
+      "id": "14-gpt-role",
+      "start": 130.4,
+      "targetDuration": 9.0,
+      "script": "The dashboard carries that journey forward, tracking reclaimed focus, high-value content, healthier habits, and intentional behavior over time."
+    },
+    {
+      "id": "15-codex-role",
+      "start": 140.4,
+      "targetDuration": 9.0,
+      "script": "With Codex, we transformed an ambitious concept into a tested, working AI product within hackathon time."
+    },
+    {
+      "id": "16-current-and-future",
+      "start": 150.4,
+      "targetDuration": 9.0,
+      "script": "DoomLess runs on desktop Instagram Reels. Next: YouTube, TikTok, LinkedIn, X, and beyond."
+    },
+    {
+      "id": "17-vision",
+      "start": 160.4,
+      "targetDuration": 9.0,
+      "script": "We believe the future of digital wellbeing isn't about spending less time online—it's about making every minute online more meaningful."
+    },
+    {
+      "id": "18-closing",
+      "start": 170.2,
+      "targetDuration": 9.5,
+      "script": "Food changed with nutrition labels. The internet is next. Choose better content with DoomLess AI. Thank you."
+    }
+  ]
+}
