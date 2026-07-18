@@ -4,6 +4,8 @@
 
 DoomLess AI is a privacy-first Chrome extension and interactive web beta that helps people decide whether a Reel deserves their attention. It turns the limited evidence available on Instagram into an explainable score, seven nutrition metrics, a plain-language verdict, and an honest confidence label.
 
+**[Watch the 3-minute DoomLess AI product demo on YouTube](https://youtu.be/Bjk7sBazsAQ)**
+
 [Live beta](https://doomless-ai-demo.poojavarshini1995.chatgpt.site/) · [Understand the score](https://doomless-ai-demo.poojavarshini1995.chatgpt.site/score-guide) · [Download Chrome beta v0.4.2](https://doomless-ai-demo.poojavarshini1995.chatgpt.site/doomless-ai-beta-v0.4.2.zip)
 
 > Beta status: the extension works on Instagram desktop using selector-defensive DOM extraction. Instagram does not guarantee stable access to captions, transcripts, media files, or page structure, so DoomLess clearly distinguishes AI analysis, surface estimates, cached results, and demo data.
@@ -24,6 +26,7 @@ DoomLess AI is a privacy-first Chrome extension and interactive web beta that he
 
 ### Try DoomLess now
 
+- [Watch the DoomLess AI product video](https://youtu.be/Bjk7sBazsAQ)
 - [Open the live beta](https://doomless-ai-demo.poojavarshini1995.chatgpt.site/)
 - [Understand the DoomLess Score](https://doomless-ai-demo.poojavarshini1995.chatgpt.site/score-guide)
 - [Download the Chrome extension beta v0.4.2](https://doomless-ai-demo.poojavarshini1995.chatgpt.site/doomless-ai-beta-v0.4.2.zip)
