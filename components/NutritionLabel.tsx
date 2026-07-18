@@ -28,6 +28,19 @@ export function NutritionLabel({ label, title = "DoomLess Digital Nutrition Labe
       <p className="mt-1 text-base font-semibold leading-6">{conclusion}</p>
       {!compact && <p className="mt-2 text-xs text-emerald-100/55">Higher Clickbait and Addiction scores mean greater risk.</p>}
 
+      {provisional && !compact ? (
+        <div className="mt-4 rounded-2xl border border-amber-200/20 bg-amber-200/10 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <strong className="text-sm text-amber-100">Surface score — limited evidence</strong>
+            <span className="rounded-full bg-white/10 px-2.5 py-1 text-[0.68rem] font-semibold text-amber-100">
+              Confidence {label.evidence.confidence}/100
+            </span>
+          </div>
+          <p className="mt-2 text-xs leading-5 text-amber-50/75">{label.evidence.limitationMessage}</p>
+          <p className="mt-2 text-xs font-semibold text-amber-100">Recommendation: analyze more before deciding.</p>
+        </div>
+      ) : null}
+
       <div className="mt-5 space-y-3 border-t border-white/10 pt-3">
         {visibleKeys.map((key) => {
           const category = CATEGORY_GUIDE_CONFIG[key];

@@ -1,0 +1,91 @@
+{
+  "model": "gpt-audio-1.5",
+  "voice": "marin",
+  "chapters": [
+    {
+      "id": "01-problem",
+      "title": "The Problem",
+      "start": 0.7,
+      "targetDuration": 27.6,
+      "script": "Every day, we swipe through hundreds of short videos, but popularity does not tell us whether a Reel deserves our attention. A thirty-second clip can teach a skill, create a healthy laugh, repeat one idea, or manipulate us into watching longer. The feed measures engagement. The user is left to measure value. DoomLess makes that invisible attention cost visible before the next swipe.",
+      "captions": [
+        "Every day, we swipe through hundreds of short videos.",
+        "But popularity does not tell us whether a Reel deserves our attention.",
+        "A thirty-second clip can teach, entertain, repeat, or manipulate.",
+        "The feed measures engagement. The user is left to measure value.",
+        "DoomLess makes the invisible attention cost visible before the next swipe."
+      ]
+    },
+    {
+      "id": "02-existing-tools",
+      "title": "Why Existing Solutions Are Not Enough",
+      "start": 28.35,
+      "targetDuration": 29.5,
+      "script": "Existing digital-wellbeing tools mainly count minutes, block apps, or report screen time after it has already been spent. They tell us how long we watched, not what we consumed or what we gained. DoomLess adds a digital nutrition layer: learning value, actionability, relevance, time efficiency, emotional impact, clickbait risk, and addiction risk—each explained in plain language, never as an unexplained number.",
+      "captions": [
+        "Existing tools mainly count minutes, block apps, or report screen time.",
+        "They tell us how long we watched—not what we consumed or gained.",
+        "DoomLess adds a Digital Nutrition layer.",
+        "Learning, actionability, relevance, time efficiency, and emotional impact.",
+        "Plus clickbait and addiction risk—always explained in plain language."
+      ]
+    },
+    {
+      "id": "03-live-demo",
+      "title": "Live Product Demo",
+      "start": 57.9,
+      "targetDuration": 29.7,
+      "script": "Here is DoomLess running on Instagram Reels in Chrome. The extension detects the visible Reel and uses the surface information available on the page. A compact label shows the score, content category, confidence, and recommendation. Expand it to see seven metrics, the evidence behind them, and return on attention. Moving to another Reel triggers cached analysis or a clearly labeled surface estimate when evidence is limited.",
+      "captions": [
+        "Here is DoomLess running on Instagram Reels in Chrome.",
+        "The extension detects the visible Reel and available surface information.",
+        "A compact label shows score, category, confidence, and recommendation.",
+        "Expand it for seven metrics, evidence, and return on attention.",
+        "New Reels use cached analysis or a clearly labeled surface estimate."
+      ]
+    },
+    {
+      "id": "04-content-comparison",
+      "title": "Compare Different Types of Content",
+      "start": 87.65,
+      "targetDuration": 29.2,
+      "script": "Different content should not be judged by one educational standard. A concise lesson can score high for learning. Comedy or dance can still be valuable when it delivers joy honestly and respects the viewer’s time. A repetitive reveal may score low because the useful moment is delayed. DoomLess separates intrinsic quality, personal relevance, and behavioral risk, then recommends Watch, Save, Limit, or Skip without shaming entertainment.",
+      "captions": [
+        "Different content should not be judged by one educational standard.",
+        "A concise lesson can score high for learning.",
+        "Comedy or dance can deliver honest joy and respect time.",
+        "A repetitive reveal may delay the only useful moment.",
+        "DoomLess separates quality, relevance, and risk—without shaming entertainment."
+      ]
+    },
+    {
+      "id": "05-ai-technology",
+      "title": "AI and Technology",
+      "start": 116.9,
+      "targetDuration": 33.0,
+      "script": "Under the hood, resilient DOM observers detect active Reels without analyzing the whole feed. Metadata is hashed, cached locally, and sent only after analysis is enabled. The backend validates structured inputs, calls GPT-5.6 for evidence-based reasoning when available, and enforces strict JSON. Shared TypeScript scoring applies transparent weights and risk overrides. If the network or model fails, a deterministic local estimator keeps the label useful and states its lower confidence. No API key is ever shipped inside the extension.",
+      "captions": [
+        "Resilient DOM observers detect active Reels without analyzing the whole feed.",
+        "Metadata is hashed, cached locally, and sent only after analysis is enabled.",
+        "The backend validates inputs and uses GPT-5.6 for evidence-based reasoning.",
+        "Shared TypeScript scoring applies transparent weights and risk overrides.",
+        "A local estimator handles failures—and no API key ships in the extension."
+      ]
+    },
+    {
+      "id": "06-vision",
+      "title": "Vision and Closing",
+      "start": 149.95,
+      "targetDuration": 29.3,
+      "script": "Our vision is a digital nutrition standard for every feed: Instagram today, then Shorts, TikTok, news, learning platforms, and family wellbeing tools. DoomLess is not here to moralize or block joy. It helps people recognize what they gain, what attention costs, and when a better choice exists. We already label the nutrition of food. Now it is time to make the nutrition of information visible. DoomLess AI. Choose your feed. Protect your future.",
+      "captions": [
+        "Our vision is a Digital Nutrition standard for every feed.",
+        "Instagram today—then Shorts, TikTok, news, learning, and wellbeing tools.",
+        "DoomLess does not moralize or block joy.",
+        "It makes value, attention cost, and better choices visible.",
+        "We label the nutrition of food. Now let's label information.",
+        "DoomLess AI. Choose your feed. Protect your future."
+      ]
+    }
+  ]
+}

@@ -10,6 +10,11 @@ import {
 } from "@doomless/shared-types";
 import { getDevelopmentDemoLabel } from "@/lib/demo-labels";
 import {
+  buildMetadataSurfaceAnalysis,
+  buildUrlSurfaceAnalysis,
+  isInstagramContentUrl,
+} from "@/lib/surface-analysis";
+import {
   analyzeRequestSchema,
   buildScoringInput,
   nutritionLabelSchema,
@@ -48,6 +53,9 @@ export async function POST(request: Request) {
   if (developmentDemo) return NextResponse.json(developmentDemo);
 
   if (!process.env.OPENAI_API_KEY) {
+    if (parsed.data.videoUrl && isInstagramContentUrl(parsed.data.videoUrl)) {
+      return NextResponse.json(buildUrlSurfaceAnalysis(parsed.data.videoUrl));
+    }
     return NextResponse.json(
       { error: "The server is missing OPENAI_API_KEY." },
       { status: 503 },
@@ -90,6 +98,10 @@ export async function POST(request: Request) {
     const demoLabel = getDevelopmentDemoLabel(parsed.data.videoUrl);
     if (demoLabel) return NextResponse.json(demoLabel);
 
+    if (parsed.data.videoUrl && isInstagramContentUrl(parsed.data.videoUrl)) {
+      return NextResponse.json(buildUrlSurfaceAnalysis(parsed.data.videoUrl));
+    }
+
     if (error instanceof OpenAI.APIError) {
       if (error.status === 401) {
         return NextResponse.json(
@@ -126,7 +138,7 @@ async function analyzeReel(metadata: ReelMetadata, preferences?: UserPreferences
     );
   }
   if (!process.env.OPENAI_API_KEY) {
-    return NextResponse.json({ error: "The server is missing OPENAI_API_KEY." }, { status: 503 });
+    return NextResponse.json(buildMetadataSurfaceAnalysis(metadata));
   }
 
   const startedAt = Date.now();
@@ -172,10 +184,7 @@ async function analyzeReel(metadata: ReelMetadata, preferences?: UserPreferences
     return NextResponse.json(result, { headers: { "Cache-Control": "private, max-age=300" } });
   } catch (error) {
     console.error("Reel analysis failed", { error, latencyMs: Date.now() - startedAt });
-    if (error instanceof OpenAI.APIError && error.status === 429) {
-      return NextResponse.json({ error: "Analysis is busy. Try again shortly." }, { status: 429 });
-    }
-    return NextResponse.json({ error: "The Reel could not be analyzed. A cached result may still be available." }, { status: 502 });
+    return NextResponse.json(buildMetadataSurfaceAnalysis(metadata));
   }
 }
 
