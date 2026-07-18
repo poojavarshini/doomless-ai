@@ -8,6 +8,28 @@ DoomLess AI is a privacy-first Chrome extension and interactive web beta that he
 
 > Beta status: the extension works on Instagram desktop using selector-defensive DOM extraction. Instagram does not guarantee stable access to captions, transcripts, media files, or page structure, so DoomLess clearly distinguishes AI analysis, surface estimates, cached results, and demo data.
 
+## Quick navigation
+
+| Explore the project | Build, test, and contribute |
+|---|---|
+| [Problem](#problem) | [Installation](#installation) |
+| [Solution](#solution) | [Install the Chrome beta](#install-the-beta-extension) |
+| [Architecture](#architecture) | [Run locally](#run-locally) |
+| [Features](#features) | [Demo instructions](#demo-instructions) |
+| [Digital Nutrition score](#digital-nutrition-score) | [AI pipeline](#ai-pipeline) |
+| [Privacy](#privacy) | [Testing](#testing) |
+| [Limitations](#limitations) | [Future roadmap](#future-roadmap) |
+| [Hackathon judging alignment](#hackathon-judging-alignment) | [How Codex and GPT-5.6 were used](#how-codex-and-gpt-56-were-used) |
+| [Beta feedback](#license-and-beta-feedback) | [GitHub Issues](https://github.com/poojavarshini/doomless-ai/issues) |
+
+### Try DoomLess now
+
+- [Open the live beta](https://doomless-ai-demo.poojavarshini1995.chatgpt.site/)
+- [Understand the DoomLess Score](https://doomless-ai-demo.poojavarshini1995.chatgpt.site/score-guide)
+- [Download the Chrome extension beta v0.4.2](https://doomless-ai-demo.poojavarshini1995.chatgpt.site/doomless-ai-beta-v0.4.2.zip)
+- [Jump directly to installation steps](#install-the-beta-extension)
+- [Jump directly to the judge demo](#fast-judge-flow-without-installing-anything)
+
 ## Problem
 
 Short-form feeds show popularity signals but hide attention cost. A viewer can see likes and comments, yet cannot quickly answer:
