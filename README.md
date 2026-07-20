@@ -287,7 +287,9 @@ pnpm build:extension
 
 ## How Codex and GPT-5.6 were used
 
-Codex acted as the implementation partner across repository inspection, extension architecture, scoring policy, React UI, reliability fixes, tests, documentation, build validation, and Sites deployment. The backend uses the configured GPT-5.6 model to transform supplied Reel evidence into a strict structured analysis. The model does not control the final published score directly: shared TypeScript policy validates and recomputes score bands, risk penalties, confidence behavior, and recommendations.
+Codex helped turn DoomLess from an early Digital Nutrition idea into a working full-stack MVP within hackathon time. It served as a continuous technical partner across product architecture, Instagram Reel detection, defensive DOM extraction, the Manifest V3 extension, React interfaces, scoring rules, caching, fallbacks, dashboard analytics, tests, accessibility, debugging, documentation, and deployment. Its ability to inspect the repository, edit multiple parts of the stack, run validation, and debug the live browser experience made rapid end-to-end iteration possible without losing engineering discipline.
+
+GPT-5.6 powers the structured content-analysis layer. It converts the limited evidence legitimately available from a Reel into explained scores for learning value, actionability, relevance, time efficiency, emotional impact, clickbait risk, and addiction risk. DoomLess requires schema-valid output and keeps the final decision under application control: shared TypeScript policy validates and recomputes the published score, confidence behavior, risk overrides, and recommendation. Together, Codex accelerated the journey from ideation to a tested MVP, while GPT-5.6 made the Digital Nutrition Label contextual, explainable, and useful.
 
 ## License and beta feedback
 
